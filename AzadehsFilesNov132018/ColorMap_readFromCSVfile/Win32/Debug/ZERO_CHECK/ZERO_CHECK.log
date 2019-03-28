@@ -1,0 +1,10 @@
+﻿Build started 11/7/2017 2:49:18 PM.
+     1>Project "C:\Azadeh\Sedeen Viewer SDK\v5.2.3.629\msvc2012\examples\plugins\ColorMap\ZERO_CHECK.vcxproj" on node 2 (Rebuild target(s)).
+     1>CustomBuild:
+         Checking Build System
+         CMake does not need to re-run because C:/Azadeh/Sedeen Viewer SDK/v5.2.3.629/msvc2012/examples/plugins/ColorMap/CMakeFiles/generate.stamp is up-to-date.
+     1>Done Building Project "C:\Azadeh\Sedeen Viewer SDK\v5.2.3.629\msvc2012\examples\plugins\ColorMap\ZERO_CHECK.vcxproj" (Rebuild target(s)).
+
+Build succeeded.
+
+Time Elapsed 00:00:00.51

@@ -1,0 +1,28 @@
+PROJECT( ColorMap )
+CMAKE_MINIMUM_REQUIRED( VERSION 2.8 )
+
+##
+## Load the Sedeen dependencies
+FIND_PACKAGE( SEDEENSDK REQUIRED 
+                HINTS ../../.. 
+                "$D:\Sedeen Viewer SDK\v5.3.1.30\msvc2017\" )
+
+
+INCLUDE_DIRECTORIES( "${SEDEENSDK_INCLUDE_DIR}" )
+
+LINK_DIRECTORIES( "${SEDEENSDK_LIBRARY_DIR}" )
+
+##
+## Build the code into a module library
+ADD_LIBRARY( ColorMap MODULE HeatMapBuilder.cpp HeatMapBuilder.h)
+
+# Link the library against the Sedeen libraries
+# NOTE: The QT libraries must be linked first.
+TARGET_LINK_LIBRARIES( ColorMap ${SEDEENSDK_LIBRARIES} )
+
+##
+## Install the plugin in the sedeen plugins directory
+IF( ${PATHCORE_FOUND} )
+  INSTALL( TARGETS ColorMap 
+           LIBRARY DESTINATION "${PATHCORE_DIR}/plugins" )
+ENDIF()

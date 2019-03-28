@@ -1,0 +1,8 @@
+﻿  Building Custom Rule D:/Sedeen Viewer SDK/v5.3.1.30/msvc2017/examples/plugins/ColorMap/CMakeLists.txt
+  CMake does not need to re-run because D:/Sedeen Viewer SDK/v5.3.1.30/msvc2017/examples/plugins/ColorMap/CMakeFiles/generate.stamp is up-to-date.
+  ColorMapBuilder.cpp
+D:\Sedeen Viewer SDK\v5.3.1.30\msvc2017\examples\plugins\ColorMap\ColorMapBuilder.cpp(95): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  MeshGridBuilder.cpp
+  Generating Code...
+     Creating library D:/Sedeen Viewer SDK/v5.3.1.30/msvc2017/examples/plugins/ColorMap/Release/ColorMap.lib and object D:/Sedeen Viewer SDK/v5.3.1.30/msvc2017/examples/plugins/ColorMap/Release/ColorMap.exp
+  ColorMap.vcxproj -> D:\Sedeen Viewer SDK\v5.3.1.30\msvc2017\examples\plugins\ColorMap\Release\ColorMap.dll
