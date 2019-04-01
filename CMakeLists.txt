@@ -1,33 +1,59 @@
-project( ColorMap )
-cmake_minimum_required(VERSION 2.8)
-cmake_policy(SET CMP0053 OLD)
+PROJECT( ColorMap )
+CMAKE_MINIMUM_REQUIRED( VERSION 3.8 )
+# Enable C++17 features
+SET(CMAKE_CXX_STANDARD 17)
+
+# Define project description variables
+SET( DISPLAY_NAME_TEXT "ColorMap Apr1-2019" CACHE STRING "Name of the plugin as it should be displayed in Sedeen Viewer")
+SET( SUPPORT_URL_TEXT "http://pathcore.com/support/plugin/info/${PROJECT_NAME}" CACHE STRING "Location users can find help with the plugin" )
+SET( DEVELOPER_TEXT "Sunnybrook Research Institute" CACHE STRING "Name of the author or organization that created the plugin" )
 
 # Load the Sedeen dependencies
-find_package(SEDEENSDK REQUIRED
+SET(PROGRAMFILESX86 "PROGRAMFILES\(X86\)")
+FIND_PACKAGE( SEDEENSDK REQUIRED 
+                HINTS ../../.. 
+                  "$ENV{${PROGRAMFILESX86}}/Sedeen Viewer SDK/v5.4.0.20181217/msvc2017"
+                  "$ENV{PROGRAMFILES}/Sedeen Viewer SDK/v5.4.0.20181217/msvc2017" )
+
+# Load the included OpenCV libs
+FIND_PACKAGE(SEDEENSDK_OPENCV REQUIRED
              HINTS ../../..
-                   "D:/Sedeen Viewer SDK/v5.3.1.30/msvc2017"
-                   "$ENV{PROGRAMFILES}/Sedeen Viewer SDK/v5.3.1.30/msvc2017" )
+                  "$ENV{${PROGRAMFILESX86}}/Sedeen Viewer SDK/v5.4.0.20181217/msvc2017"
+                  "$ENV{PROGRAMFILES}/Sedeen Viewer SDK/v5.4.0.20181217/msvc2017" )
 
-
-include_directories(${SEDEENSDK_INCLUDE_DIR}
+INCLUDE_DIRECTORIES(${INCLUDE_DIRECTORIES} ${SEDEENSDK_INCLUDE_DIR}
                     ${SEDEENSDK_OPENCV_INCLUDE_DIR})
 
-link_directories(${SEDEENSDK_LIBRARY_DIR}
+LINK_DIRECTORIES(${LINK_DIRECTORIES} ${SEDEENSDK_LIBRARY_DIR}
                  ${SEDEENSDK_OPENCV_LIBRARY_DIR})
 
-# Enable C++17 features
-set(CMAKE_CXX_STANDARD 17)
-
 # Build the plugin as a library
-add_library(ColorMap MODULE ColorMapBuilder.cpp ColorMapBuilder.h MeshGridBuilder.cpp MeshGridBuilder.h)
+ADD_LIBRARY( ${PROJECT_NAME} MODULE ColorMap.h ColorMap.cpp MeshGridBuilder.h MeshGridBuilder.cpp )
 
 # Link the library against the Sedeen libraries
 # NOTE: The QT libraries must be linked first.
-target_link_libraries(ColorMap ${SEDEENSDK_LIBRARIES}
-                                     ${SEDEENSDK_OPENCV_LIBRARIES})
+TARGET_LINK_LIBRARIES( ${PROJECT_NAME} ${SEDEENSDK_LIBRARIES}
+                               ${SEDEENSDK_OPENCV_LIBRARIES})
+
+#Create or update the .info file in the build directory
+STRING( TIMESTAMP DATE_CREATED_TEXT "%Y-%m-%d" )
+CONFIGURE_FILE( "${PROJECT_NAME}.info.in" "${PROJECT_NAME}.info" )
+
+# Set the install destination directory
+IF( NOT PLUGIN_DESTINATION_DIR )
+  IF( ${SEDEEN_FOUND} )
+	SET( TEMPPLUGINDIR "${PATHCORE_DIR}/plugins/cpp/piip/${PROJECT_NAME}" )
+  ELSE()
+	SET( TEMPPLUGINDIR "PLUGIN_DESTINATION_DIR-NOTFOUND" )
+	MESSAGE( SEND_ERROR "PLUGIN_DESTINATION_DIR not found. Set this to the target installation directory of the plugin within Sedeen Viewer (e.g. $ENV{PROGRAMFILES}/Sedeen Viewer/plugins/cpp/piip/${PROJECT_NAME}).")
+  ENDIF()
+  SET(PLUGIN_DESTINATION_DIR ${TEMPPLUGINDIR} CACHE PATH "Installation directory for the plugin within Sedeen Viewer")
+ENDIF()
 
 # Install the plugin in the sedeen plugins directory
-if(${PATHCORE_FOUND})
-  install(TARGETS ColorMap
-          LIBRARY DESTINATION "${PATHCORE_DIR}/plugins")
-endif()
+IF(${SEDEEN_FOUND})
+  INSTALL(TARGETS ${PROJECT_NAME}
+          LIBRARY DESTINATION "${PLUGIN_DESTINATION_DIR}")
+  INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.info"
+          DESTINATION "${PLUGIN_DESTINATION_DIR}")
+ENDIF()

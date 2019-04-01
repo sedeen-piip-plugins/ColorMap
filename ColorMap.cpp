@@ -1,14 +1,31 @@
-#include "ColorMapBuilder.h"
+/*=========================================================================
+ *
+ *  Copyright (c) 2019 Sunnybrook Research Institute
+ *
+ *  Licensed under the Apache License, Version 2.0 (the "License");
+ *  you may not use this file except in compliance with the License.
+ *  You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0.txt
+ *
+ *  Unless required by applicable law or agreed to in writing, software
+ *  distributed under the License is distributed on an "AS IS" BASIS,
+ *  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  See the License for the specific language governing permissions and
+ *  limitations under the License.
+ *
+ *=========================================================================*/
+
+#include "ColorMap.h"
 #include <sstream>
 #include <vector>
 
-// DPTK headers
+//Sedeen required headers
 #include "Algorithm.h"
 #include "Geometry.h"
 #include "Global.h"
 #include "Image.h"
 #include "BindingsOpenCV.h"
-
 
 // Poco header needed for the macros below 
 #include <Poco/ClassLibrary.h>
@@ -16,47 +33,50 @@
 // Declare that this object has AlgorithmBase subclasses
 //  and declare each of those sub-classes
 POCO_BEGIN_MANIFEST(sedeen::algorithm::AlgorithmBase)
-POCO_EXPORT_CLASS(sedeen::algorithm::ColorMapBuilder)
+POCO_EXPORT_CLASS(sedeen::algorithm::ColorMap)
 POCO_END_MANIFEST
 
 namespace sedeen {
 namespace algorithm {
 
-ColorMapBuilder::ColorMapBuilder()
+//Constructor
+ColorMap::ColorMap() 
 	:xscale_(1.0),
 	yscale_(1.0),
 	transparency_(),
 	display_area_(),
 	openFileDialogParam_(),
-	display_result_(){
-		//log_file = std::ofstream("log_file_1.txt", std::ios_base::out | std::ios_base::app );
-		
-}
+	display_result_(),
+	selectedFileTobeProcessed_(""){
 
-ColorMapBuilder::~ColorMapBuilder() {
-}
+	//log_file = std::ofstream("log_file_1.txt", std::ios_base::out | std::ios_base::app );
+}//end constructor
 
-void ColorMapBuilder::run() {
+//Destructor
+ColorMap::~ColorMap() {
+}//end destructor
+
+
+void ColorMap::run() {
 
 	auto display_area_isChanged = display_area_.isChanged();
 	DisplayRegion display_region = display_area_;
-	downsample_size_= display_region.output_size;
-	xscale_ = (double)(display_region.output_size.width())/(double)display_region.source_region.width();
-	yscale_ = (double)(display_region.output_size.height())/(double)display_region.source_region.height();
+	downsample_size_ = display_region.output_size;
+	xscale_ = (double)(display_region.output_size.width()) / (double)display_region.source_region.width();
+	yscale_ = (double)(display_region.output_size.height()) / (double)display_region.source_region.height();
 
 	image::RawImage outputImage(downsample_size_, ColorSpace(ColorModel::RGBA, ChannelType::UInt8));
-	outputImage.fill(0);	
-	if(parametersChanged() || display_area_isChanged) {
+	outputImage.fill(0);
+	if (parametersChanged() || display_area_isChanged) {
 		creatHeatMap(outputImage);
 		display_result_.update(outputImage, display_region.source_region);
 	}
-}
+}//end run
 
-void ColorMapBuilder::creatHeatMap(image::RawImage& outputImage)
+void ColorMap::creatHeatMap(image::RawImage& outputImage)
 {
-	if ( selectedFileTobeProcessed_.empty() )
+	if (selectedFileTobeProcessed_.empty())
 	{
-
 		sedeen::algorithm::parameter::OpenFileDialog::DataType openFileDialogDataType = openFileDialogParam_;
 		selectedFileTobeProcessed_ = openFileDialogDataType.at(0).getFilename();
 		if (!openFileDialogParam_.isUserDefined() || selectedFileTobeProcessed_.empty())
@@ -65,12 +85,13 @@ void ColorMapBuilder::creatHeatMap(image::RawImage& outputImage)
 			int ret = msgBox.exec();*/
 			throw std::runtime_error("You did not select the correct file format!");
 			//MessageBox(nullptr, LPCSTR("Please select a directory to save tiles!"), LPCSTR("Notification"), MB_OKCANCEL);
+			return;
 		}
 	}
 
-	std::string path_to_image = 
-		  image()->getMetaData()->get(image::StringTags::SOURCE_DESCRIPTION, 0);
-	 
+	std::string path_to_image =
+		image()->getMetaData()->get(image::StringTags::SOURCE_DESCRIPTION, 0);
+
 	auto source_factory = image()->getFactory();
 
 	DisplayRegion display_region = display_area_;
@@ -92,15 +113,15 @@ void ColorMapBuilder::creatHeatMap(image::RawImage& outputImage)
 	double tileSize = mBuilder->getTileSize();
 	delete mBuilder;*/
 
-	float g_max_transparency = double(transparency_)/100.0f;
+	float g_max_transparency = float(transparency_) / 100.0f;
 	/*cv::Mat heatmap = cv::Mat::zeros(downsample_size_.height(), downsample_size_.width(), CV_32FC1);
 	heatmap = meshGrid_.clone();
 	meshGrid_= cv::Mat();*/
 
-	cv::Mat meshGrid  = cv::imread(selectedFileTobeProcessed_, CV_LOAD_IMAGE_GRAYSCALE);
+	cv::Mat meshGrid = cv::imread(selectedFileTobeProcessed_, CV_LOAD_IMAGE_GRAYSCALE);
 	//cv::Mat heatmap = cv::Mat::zeros(downsample_size_.height(), downsample_size_.width(), CV_32FC1);
 	cv::Mat heatmap, heatmap_n;
-	cv::resize(meshGrid, heatmap, cv::Size(downsample_size_.width(), downsample_size_.height()) );
+	cv::resize(meshGrid, heatmap, cv::Size(downsample_size_.width(), downsample_size_.height()));
 	cv::normalize(heatmap, heatmap_n, 0.0, 1.0, cv::NORM_MINMAX, CV_32FC1);
 	double tileSize = 10;
 	double dummyValue = 1.5;
@@ -115,7 +136,7 @@ void ColorMapBuilder::creatHeatMap(image::RawImage& outputImage)
 
 	int kernel_size = 7;
 
-	if(!heatmap_n.empty()){
+	if (!heatmap_n.empty()) {
 		cv::blur(heatmap_n, temp_map, cv::Size(kernel_size, kernel_size));
 	}
 
@@ -128,36 +149,35 @@ void ColorMapBuilder::creatHeatMap(image::RawImage& outputImage)
 	double xshift = region.x()*xscale_;
 	double yshift = region.y()*yscale_;
 	image::Iterator it = getIterator(image(), region, downsample_size_);
-	while(!it.finished())
+	while (!it.finished())
 	{
 		auto position = Point(it.x(), it.y());
 		int x = it.x();// -  xshift;
 		int y = it.y();// -  yshift;
-		
-		if(region.contains(position) && (!heatmap_n.empty())) { //
+
+		if (region.contains(position) && (!heatmap_n.empty())) { //
 			const float heat_mix = heatmap_n.at<float>(cv::Point(x, y));
 			// in BGR
-			const cv::Vec3b i_color((unsigned char)it.getComponent(2), 
-				(unsigned char)it.getComponent(1), 
+			const cv::Vec3b i_color((unsigned char)it.getComponent(2),
+				(unsigned char)it.getComponent(1),
 				(unsigned char)it.getComponent(0));
 			const cv::Vec3b heat_color = opencvColor.at<cv::Vec3b>(cv::Point(x, y));
 			const float heat_mix2 = std::min(heat_mix, g_max_transparency);
 			const cv::Vec3b final_color = interpolate(i_color, heat_color, heat_mix2);
-			for (int j=0; j<3; j++){
-				outputImage.setValue(x, y, j, final_color[2-j]);
+			for (int j = 0; j < 3; j++) {
+				outputImage.setValue(x, y, j, final_color[2 - j]);
 			}
 		}
 
 		//it++;
 		it.advance();
 	}
+}//end createHeatMap
 
-}
-
-void ColorMapBuilder::init(const image::ImageHandle& input_image) {
+void ColorMap::init(const image::ImageHandle& input_image) {
 	if (isNull(input_image)) return;
 	// Create system parameter - provide information about current view in UI
-    display_area_ = createDisplayAreaParameter(*this);
+	display_area_ = createDisplayAreaParameter(*this);
 	// Bind display result image to UI
 	display_result_ = createImageResult(*this, "Final Image");
 
@@ -181,23 +201,24 @@ void ColorMapBuilder::init(const image::ImageHandle& input_image) {
 		false);
 
 	xscale_ = 1.0;
-	yscale_ = 1.0;	
+	yscale_ = 1.0;
 }
 
-bool ColorMapBuilder::parametersChanged() {
-  return transparency_.isChanged();
+
+bool ColorMap::parametersChanged() {
+	return transparency_.isChanged();
 }
 
-cv::Vec3b ColorMapBuilder::interpolate(const cv::Vec3b color1, const cv::Vec3b color2, const float value)
+cv::Vec3b ColorMap::interpolate(const cv::Vec3b color1, const cv::Vec3b color2, const float value)
 {
-	uchar b = cv::saturate_cast<uchar>(round((1.0 - value)*color1.val[0] + value*color2.val[0]));
-	uchar g = cv::saturate_cast<uchar>(round((1.0 - value)*color1.val[1] + value*color2.val[1]));
-	uchar r = cv::saturate_cast<uchar>(round((1.0 - value)*color1.val[2] + value*color2.val[2]));
+	uchar b = cv::saturate_cast<uchar>(round((1.0 - value)*color1.val[0] + value * color2.val[0]));
+	uchar g = cv::saturate_cast<uchar>(round((1.0 - value)*color1.val[1] + value * color2.val[1]));
+	uchar r = cv::saturate_cast<uchar>(round((1.0 - value)*color1.val[2] + value * color2.val[2]));
 
 	return cv::Vec3b(b, g, r);
 }
 
-double ColorMapBuilder::round(double val)
+double ColorMap::round(double val)
 {
 	return floor(val + 0.5);
 }
