@@ -4,7 +4,7 @@ CMAKE_MINIMUM_REQUIRED( VERSION 3.8 )
 SET(CMAKE_CXX_STANDARD 17)
 
 # Define project description variables
-SET( DISPLAY_NAME_TEXT "ColorMap Apr1-2019" CACHE STRING "Name of the plugin as it should be displayed in Sedeen Viewer")
+SET( DISPLAY_NAME_TEXT "ColorMap 5.4.1.20190327" CACHE STRING "Name of the plugin as it should be displayed in Sedeen Viewer")
 SET( SUPPORT_URL_TEXT "http://pathcore.com/support/plugin/info/${PROJECT_NAME}" CACHE STRING "Location users can find help with the plugin" )
 SET( DEVELOPER_TEXT "Sunnybrook Research Institute" CACHE STRING "Name of the author or organization that created the plugin" )
 
@@ -12,14 +12,14 @@ SET( DEVELOPER_TEXT "Sunnybrook Research Institute" CACHE STRING "Name of the au
 SET(PROGRAMFILESX86 "PROGRAMFILES\(X86\)")
 FIND_PACKAGE( SEDEENSDK REQUIRED 
                 HINTS ../../.. 
-                  "$ENV{${PROGRAMFILESX86}}/Sedeen Viewer SDK/v5.4.0.20181217/msvc2017"
-                  "$ENV{PROGRAMFILES}/Sedeen Viewer SDK/v5.4.0.20181217/msvc2017" )
+                  "$ENV{${PROGRAMFILESX86}}/Sedeen Viewer SDK/v5.4.1.20190327/msvc2017"
+                  "$ENV{PROGRAMFILES}/Sedeen Viewer SDK/v5.4.1.20190327/msvc2017" )
 
 # Load the included OpenCV libs
 FIND_PACKAGE(SEDEENSDK_OPENCV REQUIRED
              HINTS ../../..
-                  "$ENV{${PROGRAMFILESX86}}/Sedeen Viewer SDK/v5.4.0.20181217/msvc2017"
-                  "$ENV{PROGRAMFILES}/Sedeen Viewer SDK/v5.4.0.20181217/msvc2017" )
+                  "$ENV{${PROGRAMFILESX86}}/Sedeen Viewer SDK/v5.4.1.20190327/msvc2017"
+                  "$ENV{PROGRAMFILES}/Sedeen Viewer SDK/v5.4.1.20190327/msvc2017" )
 
 INCLUDE_DIRECTORIES(${INCLUDE_DIRECTORIES} ${SEDEENSDK_INCLUDE_DIR}
                     ${SEDEENSDK_OPENCV_INCLUDE_DIR})
@@ -37,7 +37,7 @@ TARGET_LINK_LIBRARIES( ${PROJECT_NAME} ${SEDEENSDK_LIBRARIES}
 
 #Create or update the .info file in the build directory
 STRING( TIMESTAMP DATE_CREATED_TEXT "%Y-%m-%d" )
-CONFIGURE_FILE( "${PROJECT_NAME}.info.in" "${PROJECT_NAME}.info" )
+CONFIGURE_FILE( "infoTemplate.info.in" "${PROJECT_NAME}.info" )
 
 # Set the install destination directory
 IF( NOT PLUGIN_DESTINATION_DIR )
