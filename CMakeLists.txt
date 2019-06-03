@@ -3,8 +3,11 @@ CMAKE_MINIMUM_REQUIRED( VERSION 3.8 )
 # Enable C++17 features
 SET(CMAKE_CXX_STANDARD 17)
 
+#Note which version of Sedeen Viewer this plugin was last compiled and tested with
+SET(SEDEENSDK_VERSION "5.4.2.20190715" CACHE STRING "Last version of Sedeen Viewer the plugin was compiled and tested with")
+
 # Define project description variables
-SET( DISPLAY_NAME_TEXT "ColorMap 5.4.1.20190327" CACHE STRING "Name of the plugin as it should be displayed in Sedeen Viewer")
+SET( DISPLAY_NAME_TEXT "ColorMap" CACHE STRING "Name of the plugin as it should be displayed in Sedeen Viewer")
 SET( SUPPORT_URL_TEXT "http://pathcore.com/support/plugin/info/${PROJECT_NAME}" CACHE STRING "Location users can find help with the plugin" )
 SET( DEVELOPER_TEXT "Sunnybrook Research Institute" CACHE STRING "Name of the author or organization that created the plugin" )
 
@@ -12,14 +15,14 @@ SET( DEVELOPER_TEXT "Sunnybrook Research Institute" CACHE STRING "Name of the au
 SET(PROGRAMFILESX86 "PROGRAMFILES\(X86\)")
 FIND_PACKAGE( SEDEENSDK REQUIRED 
                 HINTS ../../.. 
-                  "$ENV{${PROGRAMFILESX86}}/Sedeen Viewer SDK/v5.4.1.20190327/msvc2017"
-                  "$ENV{PROGRAMFILES}/Sedeen Viewer SDK/v5.4.1.20190327/msvc2017" )
+                  "$ENV{${PROGRAMFILESX86}}/Sedeen Viewer SDK/v5.4.2.20190715/msvc2017"
+                  "$ENV{PROGRAMFILES}/Sedeen Viewer SDK/v5.4.2.20190715/msvc2017" )
 
 # Load the included OpenCV libs
 FIND_PACKAGE(SEDEENSDK_OPENCV REQUIRED
              HINTS ../../..
-                  "$ENV{${PROGRAMFILESX86}}/Sedeen Viewer SDK/v5.4.1.20190327/msvc2017"
-                  "$ENV{PROGRAMFILES}/Sedeen Viewer SDK/v5.4.1.20190327/msvc2017" )
+                  "$ENV{${PROGRAMFILESX86}}/Sedeen Viewer SDK/v5.4.2.20190715/msvc2017"
+                  "$ENV{PROGRAMFILES}/Sedeen Viewer SDK/v5.4.2.20190715/msvc2017" )
 
 INCLUDE_DIRECTORIES(${INCLUDE_DIRECTORIES} ${SEDEENSDK_INCLUDE_DIR}
                     ${SEDEENSDK_OPENCV_INCLUDE_DIR})
@@ -56,4 +59,7 @@ IF(${SEDEEN_FOUND})
           LIBRARY DESTINATION "${PLUGIN_DESTINATION_DIR}")
   INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.info"
           DESTINATION "${PLUGIN_DESTINATION_DIR}")
+  INSTALL(DIRECTORY "${SEDEENSDK_DIR}/bin/" 
+        DESTINATION "${PLUGIN_DESTINATION_DIR}" 
+        FILES_MATCHING PATTERN "opencv*0.dll" )
 ENDIF()
