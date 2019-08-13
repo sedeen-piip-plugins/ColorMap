@@ -3,7 +3,7 @@
 ColorMap Sedeen plugin
 
 ## Authors
-Stain Analysis Plugin was developed by **Azadeh Yazanpanah**, Martel lab at Sunnybrook Research Institute (SRI), University of Toronto and was partially funded by [NIH grant](https://itcr.nci.nih.gov/funded-project/pathology-image-informatics-platform-visualization-analysis-and-management).
+Color Map Plugin was developed by **Azadeh Yazanpanah**, Martel lab at Sunnybrook Research Institute (SRI), University of Toronto and was partially funded by [NIH grant](https://itcr.nci.nih.gov/funded-project/pathology-image-informatics-platform-visualization-analysis-and-management).
 
 ## Copyright & License
 
