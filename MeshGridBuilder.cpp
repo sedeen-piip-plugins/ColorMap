@@ -24,17 +24,13 @@
 
 #include "MeshGridBuilder.h"
 
-MeshGridBuilder::MeshGridBuilder(const std::string& path_to_image , double xscale, double yscale, sedeen::Size image_size):
+MeshGridBuilder::MeshGridBuilder(const std::string& path_to_image , double xscale, double yscale, sedeen::Size image_size) :
 	m_path_to_image(path_to_image),
 	xscale_(xscale),
 	yscale_(yscale),
 	downsample_size_(image_size),
 	tileSize_(1)
 {
-	  /*log_file = std::ofstream(
-        "log_file_1.txt", std::ios_base::out | std::ios_base::app );*/
-
-
 }
 
 MeshGridBuilder::~MeshGridBuilder(void)

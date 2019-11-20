@@ -26,8 +26,8 @@
 #define SEDEEN_SRC_SPARSEHEATMAPBUILDER_SPARSEHEATMAPBUILDER_H
 
 #include <opencv2/core/core.hpp>
-#include "opencv2/highgui/highgui.hpp"
-#include "opencv2/imgproc/imgproc.hpp"
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 #include "Global.h"
 #include <fstream>
@@ -57,12 +57,7 @@ protected:
 	sedeen::Size downsample_size_;
 	double tileSize_;
 
-private:
-
-	//std::ofstream log_file;
-	
 };
-
 
 #endif
 

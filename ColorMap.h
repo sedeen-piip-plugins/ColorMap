@@ -27,7 +27,7 @@
 
  // System headers
 #include <memory>
-#include <time.h>
+#include <ctime>
 #include <fstream>
 #include <windows.h>
 
@@ -88,7 +88,6 @@ private:
 	std::vector<MeshGridBuilder::DataPoint> points_;
 	//cv::Mat meshGrid_;
 
-	//DoubleParameter transparency_;
 	IntegerParameter transparency_;
 
 	/// The display area parameter
@@ -99,8 +98,6 @@ private:
 
 	/// Image result reporter through which results are displayed
 	ImageResult display_result_;
-
-	// std::ofstream log_file;
 };
 
 } // namespace algorithm

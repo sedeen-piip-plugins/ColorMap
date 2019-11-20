@@ -53,9 +53,8 @@ ColorMap::ColorMap()
 	display_area_(),
 	openFileDialogParam_(),
 	display_result_(),
-	selectedFileTobeProcessed_(""){
-
-	//log_file = std::ofstream("log_file_1.txt", std::ios_base::out | std::ios_base::app );
+	selectedFileTobeProcessed_("") 
+{
 }//end constructor
 
 //Destructor
@@ -106,19 +105,6 @@ void ColorMap::creatHeatMap(image::RawImage& outputImage)
 	image::tile::Compositor compositor(source_factory);
 	outputImage = compositor.getImage(display_region.source_region, display_region.output_size);
 
-	/*points_.clear();
-
-	cv::Mat meshGrid_ = cv::Mat(downsample_size_.height(), downsample_size_.width(), CV_32FC1, cv::Scalar(0));
-	MeshGridBuilder * mBuilder = new MeshGridBuilder(path_to_image, xscale_, yscale_, downsample_size_);
-	bool isMeshCreated = mBuilder->creatMeshGrid(selectedFileTobeProcessed_, region, points_, meshGrid_);
-	if(!isMeshCreated)
-	{
-		delete mBuilder;
-		throw std::runtime_error("Not able to built the Mesh Grid to compute the Heat Map!");
-	}
-	double tileSize = mBuilder->getTileSize();
-	delete mBuilder;*/
-
 	float g_max_transparency = float(transparency_) / 100.0f;
 	/*cv::Mat heatmap = cv::Mat::zeros(downsample_size_.height(), downsample_size_.width(), CV_32FC1);
 	heatmap = meshGrid_.clone();
@@ -132,15 +118,13 @@ void ColorMap::creatHeatMap(image::RawImage& outputImage)
 	double tileSize = 10;
 	double dummyValue = 1.5;
 	cv::Mat temp_map;
-	//int kernel_size = ((int)tileSize*xscale_> 3) ?(dummyValue*(int)tileSize*xscale_):3; //21
-	//kernel_size = kernel_size%2 == 0 ? (kernel_size-1): kernel_size;
-
-	//if(kernel_size >= tileSize )
-	//{
-	//	kernel_size = (int)tileSize%2 == 0 ? (tileSize+1): tileSize;
-	//}
-
-	int kernel_size = 7;
+	
+    int kernel_size = (tileSize*xscale_ > 3.0) ? static_cast<int>(dummyValue*tileSize*xscale_) : 3;
+	kernel_size = kernel_size%2 == 0 ? (kernel_size-1): kernel_size;    
+    if(kernel_size >= tileSize )
+	{
+		kernel_size = static_cast<int>(tileSize)%2 == 0 ? static_cast<int>(tileSize + 1.0) : static_cast<int>(tileSize);
+	}
 
 	if (!heatmap_n.empty()) {
 		cv::blur(heatmap_n, temp_map, cv::Size(kernel_size, kernel_size));
@@ -175,7 +159,6 @@ void ColorMap::creatHeatMap(image::RawImage& outputImage)
 			}
 		}
 
-		//it++;
 		it.advance();
 	}
 }//end createHeatMap
@@ -201,15 +184,14 @@ void ColorMap::init(const image::ImageHandle& input_image) {
 	fileDialogFilter.name = "Image (*.jpg)";
 	fileDialogOptions.filters.push_back(fileDialogFilter);
 	openFileDialogParam_ = sedeen::algorithm::createOpenFileDialogParameter(*this,
-		"Directory To open the probability file",
-		"description",
+		"Intensity map file (.jpg)",
+		"Choose a .jpg file containing an intensity or probability map to overlay on the whole-slide image",
 		fileDialogOptions,
 		false);
 
 	xscale_ = 1.0;
 	yscale_ = 1.0;
 }
-
 
 bool ColorMap::parametersChanged() {
 	return transparency_.isChanged();
