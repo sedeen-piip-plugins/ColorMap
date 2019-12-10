@@ -1,12 +1,24 @@
 <h1 align="center">ColorMap Plugin</h1>
 
-The Color Map plugin allows a user to overlay an intensity map over a whole slide image (WSI). 
-The intensity map is displayed with a violet (low intensity) to red (high intensity) rainbow colour scale. 
+The Color Map plugin allows a user to overlay an intensity map over a whole slide image (WSI). This is useful for things like visual representation of 
+cellularity, but can be used for any 
+The intensity map is displayed with a violet (low) to red (high) colour scale (the "jet" scale in OpenCV). 
+The colour scale is normalized between the lowest and highest pixel values in the intensity map. Usually the lowest value is 0, 
 The user can set a percent transparency value that determines how the overlay is displayed.
 The intensity map file must be a greyscale image in .jpg format.
 
+
+
+
+Does it match the h and v scales?
+
+any other limitations?
+
+
+
+
 ## User Manual
-##### 1.	Open a whole-slide image (WSI) in Sedeen Viewer.
+##### 1.	Open a whole-slide image (WSI) in Sedeen Viewer. Zoom out so that the whole image is displayed within the view area.
 ##### 2.    Open the Analysis Manager, and load the "ColorMap" plugin from the pulldown list of Algorithms.
 
 <div align="center">

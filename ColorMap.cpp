@@ -52,6 +52,7 @@ ColorMap::ColorMap()
 	transparency_(),
 	display_area_(),
 	openFileDialogParam_(),
+    displayColorMapOnly_(),
 	display_result_(),
 	selectedFileTobeProcessed_("") 
 {
@@ -147,10 +148,19 @@ void ColorMap::creatHeatMap(image::RawImage& outputImage)
 
 		if (region.contains(position) && (!heatmap_n.empty())) { //
 			const float heat_mix = heatmap_n.at<float>(cv::Point(x, y));
-			// in BGR
-			const cv::Vec3b i_color((unsigned char)it.getComponent(2),
-				(unsigned char)it.getComponent(1),
-				(unsigned char)it.getComponent(0));
+            //If displayHeatmapOnly is true, mix between white and the color map value
+            //Otherwise, get the pixel value in BGR element order
+            cv::Vec3b i_color;
+            if (displayColorMapOnly_ == true) {
+                i_color = cv::Vec3b((unsigned char)(255),
+                    (unsigned char)(255),
+                    (unsigned char)(255));
+            }
+            else {
+                i_color = cv::Vec3b((unsigned char)it.getComponent(2),
+                    (unsigned char)it.getComponent(1),
+                    (unsigned char)it.getComponent(0));
+            }
 			const cv::Vec3b heat_color = opencvColor.at<cv::Vec3b>(cv::Point(x, y));
 			const float heat_mix2 = std::min(heat_mix, g_max_transparency);
 			const cv::Vec3b final_color = interpolate(i_color, heat_color, heat_mix2);
@@ -179,6 +189,11 @@ void ColorMap::init(const image::ImageHandle& input_image) {
 		100, // maximum allowed value
 		false); // optional or not
 
+    //User can choose whether to show the color map only, or overlay it on the slide image
+    displayColorMapOnly_ = createBoolParameter(*this, "Display color map only",
+        "If this box is checked, only the color map will be displayed, and the transparency will be with respect to a white field.",
+        false, false); //default value, optional
+
 	file::FileDialogOptions fileDialogOptions;
 	file::FileDialogFilter fileDialogFilter;
 	fileDialogFilter.name = "Image (*.jpg)";
@@ -194,7 +209,8 @@ void ColorMap::init(const image::ImageHandle& input_image) {
 }
 
 bool ColorMap::parametersChanged() {
-	return transparency_.isChanged();
+	return ( transparency_.isChanged()
+        || displayColorMapOnly_.isChanged() );
 }
 
 cv::Vec3b ColorMap::interpolate(const cv::Vec3b color1, const cv::Vec3b color2, const float value)
