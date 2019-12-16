@@ -36,7 +36,7 @@ stretching or shrinking of the intensity map may result.
   <h6> <strong>Fig 2.</strong> The "Transparency" slider allows the user to adjust the display of the intensity map. The "Display color map only" checkbox determines whether the color map will be overlaid on the slide image (unchecked), or if only the color map will be displayed (checked).</h6>
 </div>
 
-##### 6.	Click the Run button to display the intensity map. Two examples of the output are shown below. Fig. 3 shows the result of setting transparency to 60% and choosing to display the whole slide image (unchecking the Display color map only box). Fig. 4 shows the result of setting the transparency to 0%.
+##### 6.	Click the Run button to display the intensity map. Two examples of the output are shown below. Fig. 3 shows the result of setting transparency to 40% and choosing to display the whole slide image (unchecking the Display color map only box). Fig. 4 shows the result of setting the transparency to 0%.
 
 <div align="center">
   <img src="https://github.com/sedeen-piip-plugins/ColorMap/blob/master/Images/ColorMap_3.png"/>
@@ -51,9 +51,6 @@ stretching or shrinking of the intensity map may result.
 <div align="center">
   <h6> <strong>Fig 3.</strong> A color map displayed at 0% transparency with the "Display color map only" box checked.</h6>
 </div>
-
-
-
 
 ## Authors
 Color Map Plugin was developed by **Azadeh Yazanpanah** with contributions by **Michael Schumaker**, Martel lab at Sunnybrook Research Institute (SRI), University of Toronto and was partially funded by [NIH grant](https://itcr.cancer.gov/funding-opportunities/pathology-image-informatics-platform-visualization-analysis-and-management).
