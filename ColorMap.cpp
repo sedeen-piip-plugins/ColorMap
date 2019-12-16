@@ -106,7 +106,8 @@ void ColorMap::creatHeatMap(image::RawImage& outputImage)
 	image::tile::Compositor compositor(source_factory);
 	outputImage = compositor.getImage(display_region.source_region, display_region.output_size);
 
-	float g_max_transparency = float(transparency_) / 100.0f;
+    //Since the slider is "transparency" and the input parameter is opacity, flip the value used
+	float g_max_opacity = (100.0f - float(transparency_)) / 100.0f;  
 	/*cv::Mat heatmap = cv::Mat::zeros(downsample_size_.height(), downsample_size_.width(), CV_32FC1);
 	heatmap = meshGrid_.clone();
 	meshGrid_= cv::Mat();*/
@@ -162,7 +163,7 @@ void ColorMap::creatHeatMap(image::RawImage& outputImage)
                     (unsigned char)it.getComponent(0));
             }
 			const cv::Vec3b heat_color = opencvColor.at<cv::Vec3b>(cv::Point(x, y));
-			const float heat_mix2 = std::min(heat_mix, g_max_transparency);
+			const float heat_mix2 = std::min(heat_mix, g_max_opacity);
 			const cv::Vec3b final_color = interpolate(i_color, heat_color, heat_mix2);
 			for (int j = 0; j < 3; j++) {
 				outputImage.setValue(x, y, j, final_color[2 - j]);
@@ -183,9 +184,9 @@ void ColorMap::init(const image::ImageHandle& input_image) {
 	transparency_ = createIntegerParameter( // use the creation function
 		*this, // reference to the algorithm
 		"Transparency", // name
-		"Set the max transparency of the overly heatmap", // description
-		60, // default value
-		0, // minimum allowed value
+		"Set the max transparency of the color map", // description
+		40,  // default value
+		0,   // minimum allowed value
 		100, // maximum allowed value
 		false); // optional or not
 

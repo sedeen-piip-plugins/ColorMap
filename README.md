@@ -1,21 +1,18 @@
 <h1 align="center">ColorMap Plugin</h1>
 
-The Color Map plugin allows a user to overlay an intensity map over a whole slide image (WSI). This is useful for things like visual representation of 
-cellularity, but can be used for any 
-The intensity map is displayed with a violet (low) to red (high) colour scale (the "jet" scale in OpenCV). 
-The colour scale is normalized between the lowest and highest pixel values in the intensity map. Usually the lowest value is 0, 
-The user can set a percent transparency value that determines how the overlay is displayed.
-The intensity map file must be a greyscale image in .jpg format.
+The Color Map plugin allows a user to overlay an intensity map over a whole slide image (WSI). 
+In particular, this is useful for the visual representation of cellularity or 2D probability distributions.
+The intensity map is displayed with a violet (low) to red (high) color scale (the "jet" scale in OpenCV). 
+The color scale is normalized between the lowest and highest pixel values in the intensity map. 
+The user can set a percent transparency value that determines how the color map is displayed, 
+and can choose whether to display the color map with or without the underlying slide image.
 
-
-
-
-Does it match the h and v scales?
-
-any other limitations?
-
-
-
+The intensity map file must be a greyscale image in .jpg format. Before running, the view must be zoomed
+out so that the entire low-resolution slide image is contained within the view area. When the 
+intensity map is loaded, the horizontal and vertical dimensions of the slide image are used 
+to scale the horizontal and vertical dimensions of the intensity map's JPEG image. If the dimensions 
+of the imported file are not in the same ratio as the dimensions of the whole slide image, unexpected
+stretching or shrinking of the intensity map may result.
 
 ## User Manual
 ##### 1.	Open a whole-slide image (WSI) in Sedeen Viewer. Zoom out so that the whole image is displayed within the view area.
@@ -28,24 +25,35 @@ any other limitations?
   <h6> <strong>Fig 1.</strong> The Analysis Manager, after loading a whole-slide image (WSI) and choosing the ColorMap plugin from the pulldown list of algorithms.</h6>
 </div>
 
-##### 3.	Adjust the Transparency slider or enter a number between 0 and 100 in the spinbox to choose how the intensity map will be displayed over the whole slide image.
-##### 4.	Click the folder icon to choose an intensity map file. The file must be in .jpg format.
+##### 3.	Adjust the Transparency slider or enter a number between 0 and 100 in the spinbox to choose how the intensity map will be displayed.
+##### 4.	To display only the color map and hide the slide image, check the box labeled, "Display color map only". Leave this unchecked to overlay the color map over the slide image.
+##### 5.	Click the folder icon to choose an intensity map file. The file must be in .jpg format.
 
 <div align="center">
   <img src="https://github.com/sedeen-piip-plugins/ColorMap/blob/master/Images/ColorMap_2.png"/>
 </div>
 <div align="center">
-  <h6> <strong>Fig 2.</strong> The Transparency slider allows the user to adjust the display of the intensity map. The second parameter allows the user to open an intensity file in .jpg format.</h6>
+  <h6> <strong>Fig 2.</strong> The "Transparency" slider allows the user to adjust the display of the intensity map. The "Display color map only" checkbox determines whether the color map will be overlaid on the slide image (unchecked), or if only the color map will be displayed (checked).</h6>
 </div>
 
-##### 4.	Click the Run button to overlay the intensity map on the image.
+##### 6.	Click the Run button to display the intensity map. Two examples of the output are shown below. Fig. 3 shows the result of setting transparency to 60% and choosing to display the whole slide image (unchecking the Display color map only box). Fig. 4 shows the result of setting the transparency to 0%.
 
 <div align="center">
   <img src="https://github.com/sedeen-piip-plugins/ColorMap/blob/master/Images/ColorMap_3.png"/>
 </div>
 <div align="center">
-  <h6> <strong>Fig 3.</strong> An intensity map displayed at 60% intensity over a whole-slide image.</h6>
+  <h6> <strong>Fig 3.</strong> A color map displayed at 40% transparency over a whole-slide image.</h6>
 </div>
+
+<div align="center">
+  <img src="https://github.com/sedeen-piip-plugins/ColorMap/blob/master/Images/ColorMap_4.png"/>
+</div>
+<div align="center">
+  <h6> <strong>Fig 3.</strong> A color map displayed at 0% transparency with the "Display color map only" box checked.</h6>
+</div>
+
+
+
 
 ## Authors
 Color Map Plugin was developed by **Azadeh Yazanpanah** with contributions by **Michael Schumaker**, Martel lab at Sunnybrook Research Institute (SRI), University of Toronto and was partially funded by [NIH grant](https://itcr.cancer.gov/funding-opportunities/pathology-image-informatics-platform-visualization-analysis-and-management).
