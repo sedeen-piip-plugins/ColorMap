@@ -96,6 +96,9 @@ private:
 	OpenFileDialogParameter openFileDialogParam_;
 	std::string selectedFileTobeProcessed_;
 
+    ///Specify whether to show the color map only, or show it over the slide image
+    BoolParameter displayColorMapOnly_;
+
 	/// Image result reporter through which results are displayed
 	ImageResult display_result_;
 };
